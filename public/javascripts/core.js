@@ -2,43 +2,33 @@ var directory = angular.module('directory', [])
 
 .controller('directoryController', [
     '$scope', '$http',
-    function ($scope, $http) {
-    $scope.five = 5;
-    $scope.formData = {};
+    function ($scope, socket) {
 
-    // when landing on the page, get all todos and show them
-    // $http.get('/api/todos')
-    //     .success(function(data) {
-    //         $scope.todos = data;
-    //         console.log(data);
-    //     })
-    //     .error(function(data) {
-    //         console.log('Error: ' + data);
-    //     });
-
-    // when submitting the add form, send the text to the node API
-    $scope.createTodo = function() {
-        $http.post('/api/todos', $scope.formData)
-            .success(function(data) {
-                $scope.formData = {}; // clear the form so our user is ready to enter another
-                $scope.todos = data;
-                console.log(data);
-            })
-            .error(function(data) {
-                console.log('Error: ' + data);
-            });
-    };
-
-    // delete a todo after checking it
-    $scope.deleteTodo = function(id) {
-        $http.delete('/api/todos/' + id)
-            .success(function(data) {
-                $scope.todos = data;
-                console.log(data);
-            })
-            .error(function(data) {
-                console.log('Error: ' + data);
-            });
-    };
-
+        $scope.updateQuery = function (query) {
+            console.log('new query is ' + query);
+        }
 }]);
+
+directory.factory('socket', function ($rootScope) {
+  var socket = io.connect();
+  return {
+    on: function (eventName, callback) {
+      socket.on(eventName, function () {
+        var args = arguments;
+        $rootScope.$apply(function () {
+          callback.apply(socket, args);
+        });
+      });
+    },
+    emit: function (eventName, data, callback) {
+      socket.emit(eventName, data, function () {
+        var args = arguments;
+        $rootScope.$apply(function () {
+          if (callback) {
+            callback.apply(socket, args);
+          }
+        });
+      })
+    }
+  };
+});

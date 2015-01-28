@@ -64,4 +64,6 @@ var Person = mongoose.model('Person', {
 });
 
 
-module.exports = app;
+var stuff = require('./deploy')(app);
+var server = stuff.server;
+var io = stuff.io;
