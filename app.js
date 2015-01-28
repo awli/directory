@@ -105,7 +105,11 @@ createIndexIfNonexistant();
 
 // function for lookup up the results of a query.
 function lookup(query, callback) {
-    esClient.search({index: 'directory', q: query},
+    if (query == '') {
+        callback([]);
+        return;
+    }
+    esClient.search({index: 'directory', q: query + '*'},
         function (error, response) {
             var hits = response.hits.hits;
             var processedHits = hits.map(function (x) { return x._source });
