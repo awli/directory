@@ -67,3 +67,10 @@ var Person = mongoose.model('Person', {
 var stuff = require('./deploy')(app);
 var server = stuff.server;
 var io = stuff.io;
+
+io.on('connection', function (socket) {
+    console.log('connected');
+    socket.on('query', function (data) {
+        console.log(data)
+    })
+});
