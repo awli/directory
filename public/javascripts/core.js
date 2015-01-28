@@ -6,6 +6,9 @@ var directory = angular.module('directory', [])
         var socket = io.connect();
 
         $scope.updateQuery = function (query) {
-            socket.emit('query', { query: query })
+            socket.emit('query', { query: query },
+                function processResponse(results) {
+                    $scope.results = results;
+                })
         }
 }]);
