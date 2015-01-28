@@ -75,5 +75,16 @@ io.on('connection', function (socket) {
 
 // function for lookup up the results of a query.
 function lookup(query) {
-    return 'Hello world! Your query was ' + query + query.length;
+    return [
+    {
+        name: query,
+        phone: '510-555-1234',
+    }
+    ,
+    {
+        name: 'Allen Li',
+        phone: '510-555-1234',
+    }
+
+    ];
 }

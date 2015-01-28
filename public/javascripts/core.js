@@ -9,6 +9,7 @@ var directory = angular.module('directory', [])
             socket.emit('query', { query: query },
                 function processResponse(results) {
                     $scope.results = results;
+                    $scope.$apply();
                 })
         }
 }]);
