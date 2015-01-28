@@ -79,15 +79,16 @@ function createIndexIfNonexistant() {
         function (exists) {
             if (!exists) {
                 esClient.indices.create({index: 'directory'})
-                esClient.index({
-                    index: 'directory',
-                    type: 'person',
-                    body: {
-                        name: 'Oski Bear',
-                        phone: '510-555-1234'
-                    }
-                })
             }
+            esClient.index({
+                index: 'directory',
+                type: 'person',
+                id: 'oski',
+                body: {
+                    name: 'Oski Bear',
+                    phone: '510-555-1234'
+                }
+            })
         });
 }
 
