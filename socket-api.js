@@ -29,14 +29,14 @@ module.exports = function (server, io) {
   function lookupRecord(query, callback) {
     if (query == '') {
       callback([]);
-      return;
+    } else {
+      esClient.search({index: 'directory', q: query + '*'},
+        function (error, response) {
+          var hits = response.hits.hits;
+          var processedHits = hits.map(function (x) { return x._source });
+          callback(processedHits);
+        });
     }
-    esClient.search({index: 'directory', q: query + '*'},
-      function (error, response) {
-        var hits = response.hits.hits;
-        var processedHits = hits.map(function (x) { return x._source });
-        callback(processedHits);
-      });
   }
 
   // when we get a connection query on socket.io
