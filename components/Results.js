@@ -1,11 +1,13 @@
 var React = require('react');
+var ResultEntry = require('./ResultEntry');
 
 module.exports = React.createClass({
   render: function () {
     return (
       <ul>
-        <li> Result 1 </li>
-        <li> Result 2 </li>
+        {this.props.results.map(function (result) {
+          return <ResultEntry result={result}/>
+        })}
       </ul>
     )
   }
