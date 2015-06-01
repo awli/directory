@@ -1,41 +1,32 @@
+elasticsearch = require('elasticsearch');
+
 module.exports = function (server, io) {
-  io.on('connection', function (socket) {
-    socket.on('query', function (data, callback) {
-      lookup(data.query, callback);
-    })
-  });
 
-  function createIndexIfNonexistant() {
-    esClient.indices.exists({index: 'directory'}).then(
-      function (exists) {
-        if (!exists) {
-          esClient.indices.create({index: 'directory'})
-        }
-        esClient.index({
-          index: 'directory',
-          type: 'person',
-          id: 'oski',
-          body: {
-            name: 'Oski Bear',
-            phone: '510-555-1234'
-          }
-        })
-      });
-  }
-
-  // conveninence housekeeping function
-  function destroyIndex() {
-    esClient.indices.delete({index: 'directory'})
-  }
-
+  // Setup the Elastic Search Host
   esHost = process.env.BONSAI_URL || 'localhost:9200'
   var esClient = new elasticsearch.Client({
     host: esHost
   })
-  createIndexIfNonexistant();
+
+  // Ensure that the index exists
+  esClient.indices.exists({index: 'directory'}).then(
+    function (exists) {
+      if (!exists) {
+        esClient.indices.create({index: 'directory'})
+      }
+      esClient.index({
+        index: 'directory',
+        type: 'person',
+        id: 'oski',
+        body: {
+          name: 'Oski Bear',
+          phone: '510-555-1234'
+        }
+      })
+    });
 
   // function for lookup up the results of a query.
-  function lookup(query, callback) {
+  function lookupRecord(query, callback) {
     if (query == '') {
       callback([]);
       return;
@@ -47,6 +38,14 @@ module.exports = function (server, io) {
         callback(processedHits);
       });
   }
+
+  // when we get a connection query on socket.io
+  // return the results
+  io.on('connection', function (socket) {
+    socket.on('query', function (data, callback) {
+      lookupRecord(data.query, callback);
+    })
+  });
 
 
 }
