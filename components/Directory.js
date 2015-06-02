@@ -1,20 +1,36 @@
 var React = require('react');
 var QueryBar = require('./QueryBar');
 var Results = require('./Results');
+var PageHeader = require('react-bootstrap').PageHeader;
+var DirectoryStore = require('../stores/DirectoryStore');
 
 module.exports = React.createClass({
+  getInitialState: function () {
+    return {
+      results: []
+    }
+  },
+
+  onChange: function () {
+    this.setState({
+      results: DirectoryStore.getResults()
+    })
+  },
+
+  componentDidMount: function () {
+    DirectoryStore.on('change', this.onChange);
+  },
+
+  componentWillUnmount: function () {
+    DirectoryStore.off('change', this.onChange);
+  },
+
   render: function () {
-    var fakeResults = [
-      {name: 'Oski Bear', phone: '5551234'},
-      {name: 'Oski Bear', phone: '5551234'},
-      {name: 'Oski Bear', phone: '5551234'},
-      {name: 'John ', phone: '5551234'}
-    ];
     return (
-      <div className="container-fluid">
-        <h1>Directory Lookup</h1>
+      <div className="container">
+        <PageHeader>Directory Lookup</PageHeader>
         <QueryBar />
-        <Results {...this.props} results={fakeResults}/>
+        <Results {...this.props} results={this.state.results}/>
       </div>
     )
   }

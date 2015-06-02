@@ -6,7 +6,7 @@ module.exports = React.createClass({
     return (
       <ul>
         {this.props.results.map(function (result) {
-          return <ResultEntry result={result}/>
+          return <ResultEntry key={result.name} result={result}/>
         })}
       </ul>
     )
