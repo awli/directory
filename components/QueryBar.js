@@ -23,7 +23,7 @@ module.exports = React.createClass({
         value={this.state.value}
         placeholder='Who are you looking for?'
         ref='input'
-        autofocus='autofocus'
+        autoFocus
         groupClassName='group-class'
         labelClassName='label-class'
         onChange={this.onChange} />
