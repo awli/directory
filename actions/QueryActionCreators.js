@@ -13,7 +13,7 @@ if (typeof window != 'undefined') {
 
 module.exports = {
   queryPerson: function (inputString) {
-    socket.emit('query', {query: inputString}, function (results) {
+    socket.emit('query', {query: inputString + '*'}, function (results) {
       AppDispatcher.dispatch({
         type: ActionTypes.UPDATE_RESULTS,
         results: results

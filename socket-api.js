@@ -30,7 +30,7 @@ module.exports = function (server, io) {
     if (query == '') {
       callback([]);
     } else {
-      esClient.search({index: 'directory', q: query + '*'},
+      esClient.search({index: 'directory', q: query},
         function (error, response) {
           var hits = response.hits.hits;
           var processedHits = hits.map(function (x) { return x._source });
