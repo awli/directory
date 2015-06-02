@@ -28,13 +28,13 @@ module.exports = function (server, io) {
   // function for lookup up the results of a query.
   function lookupRecord(query, callback) {
     if (query == '') {
-      callback([]);
+      callback(null, []);
     } else {
       esClient.search({index: 'directory', q: query},
         function (error, response) {
           var hits = response.hits.hits;
           var processedHits = hits.map(function (x) { return x._source });
-          callback(processedHits);
+          callback(null, processedHits);
         });
     }
   }
